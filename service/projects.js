@@ -1,8 +1,12 @@
-const db = require('../models')
+const models = require('../models')
+const { Project, UserProject } = models
 
 const projectService = {
   findAll: () => {
-    return db.Project.findAll()
+    return Project.findAll()
+  },
+  findByUser: (userId) => {
+    return UserProject.findAll({ where: { userId }})
   }
 }
 

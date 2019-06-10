@@ -27,6 +27,10 @@ module.exports = {
       password: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      role: {
+        allowNull: false,
+        type: Sequelize.STRING
       }
     });
   },
