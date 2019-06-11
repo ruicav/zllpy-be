@@ -4,18 +4,14 @@ const timekeeperService = require('../service/timekeepers')
 const userProjectService = require('../service/userProject')
 
 router.post('/', (req, res) => {
-  const { userId } = req.body
-  const { userProjectId, workingDate , workingTime } = req.body
-  return timekeeperService.isAbleToCreate({ userId, userProjectId })
-    .then(isAble => {
-      return isAble
-        ? timekeeperService.create({ userProjectId, workingDate , workingTime })
-            .then(timekeeper => res.status(201).json(timekeeper))
-            .catch((err) => {
-              console.log('There was an error creating timekeeper', JSON.stringify(err))
-              return res.send(err)
-            })
-        : res.status(401).json({message: 'Invalid credentials'})
+  const { userId, projects } = req.body
+  const { projectId, workingDate , workingTime } = req.body
+  const userProjectId = [...projects].filter(p => p.projectId === projectId)[0].id
+  return timekeeperService.create({ userProjectId, workingDate , workingTime })
+    .then(timekeeper => res.status(201).json(timekeeper))
+    .catch((err) => {
+      console.log('There was an error creating timekeeper', JSON.stringify(err))
+      return res.send(err)
     })
 })
 

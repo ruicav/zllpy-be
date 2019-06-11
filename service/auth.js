@@ -8,7 +8,7 @@ const authService = {
       {
         id: user.id,
         role: user.role,
-        projects: [...user.projects].map(p => p.id)
+        projects: [...user.projects].map(p => p["UserProject"])
       },
       SECRET,
       { expiresIn: '1h' }

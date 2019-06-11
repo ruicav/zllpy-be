@@ -19,6 +19,12 @@ userProjectService = {
         })
         return grouped
       })
+  },
+  findIdWithUserAndProject: ({ projectId, userId }) => {
+    return UserProject.findAll({ where: { projectId, userId }})
+      .then(userProjects => {
+        return userProjects[0].id
+      })
   }
 }
 
