@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 const timekeeperService = require('../service/timekeepers')
+const userProjectService = require('../service/userProject')
 
 router.post('/', (req, res) => {
   const { userId } = req.body
@@ -19,16 +20,26 @@ router.post('/', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-  const { role, userId } = req.body
+  const { role, userId, projects } = req.body
   return role === 'admin' 
     ? timekeeperService.findAll()
-        .then((timekeepers) => res.send(timekeepers))
+        .then((timekeepers) => {
+          return userProjectService.groupHoursWithProjects(timekeepers)
+        })
+        .then(grouped => {
+          return res.status(200).json(grouped)
+        })
         .catch((err) => {
           console.log('There was an error querying timekeepers', JSON.stringify(err))
           return res.send(err)
         })
     : timekeeperService.findByUser(userId)
-        .then((timekeepers) => res.status(200).json(timekeepers))
+        .then((timekeepers) => {
+          return userProjectService.groupHoursWithProjects(timekeepers, userId)
+        })
+        .then(grouped => {
+          return res.status(200).json(grouped)
+        })
         .catch((err) => {
           console.log('There was an error querying timekeepers', JSON.stringify(err))
           return res.send(err)

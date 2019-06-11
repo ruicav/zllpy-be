@@ -7,6 +7,12 @@ const projectService = {
   },
   findByUser: (userId) => {
     return UserProject.findAll({ where: { userId }})
+      .then(userProjects => {
+        return [...userProjects].map(userProject => {
+          return Project.findByPk(userProject.projectId)
+        })
+      })
+      .then(promises => Promise.all(promises))
   }
 }
 
